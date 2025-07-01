@@ -99,10 +99,11 @@ function set_global_precision(T::Type{<:AbstractFloat})
     FloatType[] = T
 end
 
-include("onnx_reader/nodes.jl")
-include("onnx_reader/nonlinear.jl")
-include("onnx_reader/indexing.jl")
-include("onnx_reader/onnx_constructors.jl")
+# RotatedHyperrectangle was removed from LazySets in v3.0.0 
+# So I just copied the code here.
+# TODO: Do we really need this set representation?
+include("LazySetsAdapter/RotatedHyperrectangle.jl")
+using .LazySetsAdapter: RotatedHyperrectangle
 
 include("spec/spec.jl")
 export ImageConvexHull, InputSpec, OutputSpec, ImageLinfBall
