@@ -24,7 +24,8 @@ using PaddedViews
 using Accessors
 
 using Images, ImageIO
-using ONNXNaiveNASflux, NaiveNASflux, .NaiveNASlib
+# removed those packages to allow for newer versions of Julia
+# using ONNXNaiveNASflux, NaiveNASflux, .NaiveNASlib
 using LinearAlgebra
 using OpenCV
 using Flux
@@ -98,6 +99,11 @@ export set_global_precision, FloatType
 function set_global_precision(T::Type{<:AbstractFloat})
     FloatType[] = T
 end
+
+include("onnx_reader/nodes.jl")
+include("onnx_reader/nonlinear.jl")
+include("onnx_reader/indexing.jl")
+include("onnx_reader/onnx_constructors.jl")
 
 include("spec/spec.jl")
 export ImageConvexHull, InputSpec, OutputSpec, ImageLinfBall
