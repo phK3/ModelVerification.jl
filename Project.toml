@@ -24,8 +24,6 @@ LazySets = "b4f0291d-fe17-52bc-9479-3d1a343d9043"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 MathOptInterface = "b8f27783-ece8-5eb3-8dc8-9495eed66fee"
 NNlib = "872c559c-99b0-510c-b3b7-b6c96a88d5cd"
-NaiveNASflux = "85610aed-7d32-5e57-bb50-4c2e1c9e7997"
-ONNXNaiveNASflux = "2e935253-ba83-4645-9154-13ffeb13a688"
 OpenCV = "f878e3a2-a245-4720-8660-60795d644f2a"
 PaddedViews = "5432bcbf-9aad-5242-b902-cca2824c8663"
 Parameters = "d96e819e-fc66-5662-9728-84c9c7592b0a"
@@ -43,11 +41,10 @@ Symbolics = "0c5d862f-8b57-4792-8d23-62f2024744c7"
 TimerOutputs = "a759f4b9-e2f1-59dc-863e-4aeb61b1ea8f"
 UUIDs = "cf7118a7-6976-5b1a-9a39-7adc72f591a4"
 Zygote = "e88e6eb3-aa80-5325-afca-941959d7151f"
+cuDNN = "02a925ec-e4fe-4b08-9a7e-0d78e3d38ccd"
 
 [compat]
-JuMP = "=1.5.0"
-LazySets = "1.57"
-julia = ">= 1.5"
+cuDNN = "1.4.3"
 
 [extras]
 CUDA_Runtime_jll = "76a88914-d11a-5bdc-97e0-2f5a05c973a2"
