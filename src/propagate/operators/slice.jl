@@ -4,7 +4,7 @@
 struct Slice
     dims::Tuple
 end
-Flux.@functor Slice
+Flux.@layer Slice
 # Define how the layer works on input `x`
 (m::Slice)(x::AbstractArray) = x[m.dims...]
 function (m::Slice)(x)

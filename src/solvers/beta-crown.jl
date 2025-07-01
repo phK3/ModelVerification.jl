@@ -80,7 +80,7 @@ struct Compute_bound
     batch_data_min
     batch_data_max
 end
-Flux.@functor Compute_bound ()
+Flux.@layer Compute_bound
 
 
 function (f::Compute_bound)(x)
