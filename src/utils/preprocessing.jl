@@ -10,9 +10,9 @@ Structure containing the information of the neural network to be verified.
 - `node_layer` (`Dict`): Dictionary of all the nodes. The key is the name of the 
     node and the value is the operation performed at the node.
 - `node_prevs` (`Dict`): Dictionary of the nodes connected to the current node.
-    The key is the name of the node and the value is the list of nodes.
+    The key is the name of the node and the value is the list of nodes. (actually the values are the names of the nodes)
 - `node_nexts` (`Dict`): Dictionary of the nodes connected from the current 
-    node. The key is the name of the node and the value is the list of nodes.
+    node. The key is the name of the node and the value is the list of nodes. (actually the values are the names of the nodes)
 - `activation_nodes` (`Array{String, 1}`): List of all the activation nodes' 
     names.
 - `activation_number` (`Int`): Number of activation nodes (deprecated in the 
