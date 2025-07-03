@@ -44,8 +44,11 @@ VNNLib = "286915b0-5841-4eea-9013-d818f395ad8c"
 Zygote = "e88e6eb3-aa80-5325-afca-941959d7151f"
 cuDNN = "02a925ec-e4fe-4b08-9a7e-0d78e3d38ccd"
 
+[sources]
+VNNLib = {url = "https://github.com/samysweb/VNNLib.jl", rev="extension"}
+
 [compat]
-VNNLib = "0.2.0"
+VNNLib = "0.3.0"
 cuDNN = "1.4.3"
 
 [extras]
