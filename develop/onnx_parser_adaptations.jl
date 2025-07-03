@@ -4,7 +4,7 @@ import VNNLib.OnnxParser: onnx_node_to_flux_layer
 const OXP = VNNLib.OnnxParser
 const MV = ModelVerification
 
-
+## Convert OnnxNet to Flux
 
 function parent_nodes(comp_graph::OnnxNet, vertex::VNNLib.OnnxParser.Node)
     parents = [comp_graph.nodes[name] for name in comp_graph.node_prevs[vertex.name]]
@@ -86,10 +86,14 @@ function build_flux_model(onnx_model_path)
 end
 
 
+## Don't try to convert Flux model to ONNX again
+
 # Just add thing_to_match, s.t. we don't call the standard constructor
 ModelVerification.Problem(model::Chain, input_data, output_data, path::String) = #If the Problem only have onnx model input
     Problem(path, model, input_data, output_data)
 
+
+## Convert OnnxNet to ModelGraph
 
 function Base.convert(::Type{ModelVerification.ModelGraph}, model::OnnxNet)
     # Convert the ONNX model to a ModelGraph
@@ -117,22 +121,20 @@ function my_prepare_problem(search_method::SearchMethod, split_method::SplitMeth
 end
 
 
+## Adjust propagation methods to work with ONNX layers
+
 function MV.propagate_layer_batch(prop_method::Crown, node::OXP.ONNXLinear, bound::MV.CrownBound, batch_info)
-    # TODO: special case if node.transpose == true needs to be handled!!!
-    layer = node.dense
-    # out_dim x in_dim * in_dim x X_dim x batch_size
-    output_Low, output_Up = prop_method.use_gpu ? MV.batch_interval_map(fmap(cu, layer.weight), bound.batch_Low, bound.batch_Up) : MV.batch_interval_map(layer.weight, bound.batch_Low, bound.batch_Up)
-    @assert !any(isnan, output_Low) "contains NaN"
-    @assert !any(isnan, output_Up) "contains NaN"
-    output_Low[:, end, :] .+= prop_method.use_gpu ? fmap(cu, layer.bias) : layer.bias
-    output_Up[:, end, :] .+= prop_method.use_gpu ? fmap(cu, layer.bias) : layer.bias
-    new_bound = MV.CrownBound(output_Low, output_Up, bound.batch_data_min, bound.batch_data_max, bound.img_size)
-    return new_bound
+    @assert node.transpose == false "Transpose argument is currently not supported for ONNXLinear!"
+    MV.propagate_layer_batch(prop_method, node.dense, bound, batch_info)
 end
+
 
 function MV.propagate_layer_batch(prop_method::Crown, node::OXP.ONNXRelu, original_bound::MV.CrownBound, batch_info)
     MV.propagate_layer_batch(prop_method, Flux.relu, original_bound, batch_info)
 end
+
+
+## Just copy the verify method and swap the functions to the ones we defined above.
 
 function my_verify(search_method::SearchMethod, split_method::SplitMethod, prop_method::PropMethod, problem::Problem; 
                 time_out=86400, 
@@ -164,6 +166,9 @@ function my_verify(search_method::SearchMethod, split_method::SplitMethod, prop_
 end
 
 
+## Introductory example from Readme
+
+
 # load model
 onnx_path = "models/small_nnet.onnx"
 toy_model = build_flux_model(onnx_path)
@@ -183,4 +188,3 @@ solver = Crown(use_gpu=false, bound_lower=true, bound_upper=true)
 
 # solve the problem
 result = my_verify(search_method, split_method, solver, problem)
-
