@@ -152,12 +152,13 @@ function joint_optimization(pre_bound_method, batch_input::AbstractVector, model
     # pre_bounds = Dict()
     batch_size = length(batch_input)
     for node in model_info.activation_nodes
-        # println("sub model node: ", node)
+        println("sub model node: ", node)
         @assert length(model_info.node_prevs[node]) == 1
         prev_node = model_info.node_prevs[node][1]
         
         sub_model_info = get_sub_model(model_info, prev_node)
-        # @show sub_model_info.all_nodes
+        @show sub_model_info.all_nodes
+        @show length(batch_info[prev_node][:size_after_layer])
         if length(batch_info[prev_node][:size_after_layer]) == 4
             n_out = batch_info[prev_node][:size_after_layer][1:3]
             # @show n_out
@@ -178,7 +179,9 @@ function joint_optimization(pre_bound_method, batch_input::AbstractVector, model
         end
         # @show size(I_spec.A), size(I_spec.b)
         
+        println("before prepare_method for sub_model")
         sub_out_spec, sub_batch_info = prepare_method(pre_bound_method, batch_input, I_spec, [batch_info], sub_model_info, true)
+        println("sub_out_spec: ", sub_out_spec)
         # println("keys: ", keys(sub_batch_info))
         # if haskey(sub_batch_info, "dense_0_relu")
         #     println("dense_0_relu low A:", sub_batch_info["dense_0_relu"])
@@ -214,14 +217,17 @@ function prepare_method(prop_method::BetaCrown, batch_input::AbstractVector, out
     # @show batch_info
     batch_info[:spec_A_b] = [out_specs.A, .-out_specs.b] # spec_A x < spec_b  ->  A x + b < 0, need negation
 
-    # println("list_inheritance: ", inheritance_list)
+    println("list_inheritance: ", inheritance_list)
+    @show eltype(inheritance_list)
 
     # println("batch_inheritance: ", batch_inheritance)
 
-    if prop_method.inherit_pre_bound && eltype(inheritance_list) != Nothing # pre_bound can be inherited from the parent branch 
+    # TODO: added ... && !sub (need to check if that is correct)
+    if prop_method.inherit_pre_bound && eltype(inheritance_list) != Nothing && !sub # pre_bound can be inherited from the parent branch 
         # println("inheritating pre bound ...")
         for node in model_info.activation_nodes
-            # @show node
+            @show node
+            @show batch_info[node]
             # @show batch_inheritance[node]
             # println("batch_inheritance[node][:pre_lower]:", batch_inheritance[node][:pre_lower])
             batch_info[node][:pre_lower] = batchify_inheritance(inheritance_list, node, :pre_lower, prop_method.use_gpu)
@@ -236,7 +242,7 @@ function prepare_method(prop_method::BetaCrown, batch_input::AbstractVector, out
         end
         # println("---done iterating act nodes ---")
     elseif prop_method.pre_bound_method isa BetaCrown  # requires recursive bounding, iterate from first layer
-
+        println("Using BetaCrown for computing pre bound!")
         # println("---computing pre bound ---")
         batch_info = joint_optimization(prop_method.pre_bound_method, batch_input, model_info, batch_info)
         
@@ -354,6 +360,7 @@ function init_node_alpha(layer::typeof(relu), node, batch_info, batch_input)
     upper_slope, upper_bias = relu_upper_bound(l, u) #upper slope and upper bias
     # lower_slope = convert(typeof(upper_slope), upper_slope .> 0.5) #lower slope
     # @show upper_slope
+    # TODO: initialize with adaptive slopes
     lower_slope = deepcopy(upper_slope) #lower slope
     # lower_slope = zeros(size(upper_slope))
 
