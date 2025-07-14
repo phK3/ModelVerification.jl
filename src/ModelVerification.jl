@@ -25,6 +25,7 @@ using Accessors
 using Images, ImageIO
 # removed those packages to allow for newer versions of Julia
 # using ONNXNaiveNASflux, NaiveNASflux, .NaiveNASlib
+using VNNLib  # added this package instead
 using LinearAlgebra
 using OpenCV
 using Flux
@@ -283,6 +284,11 @@ export verify
 
 include("utils/visualization.jl")
 export visualize, visualize_inference
+
+# TODO: this is my code with adaptations to VNNLib.OnnxParser
+#   I didn't want to integrate it directly into ModelVerification before I know if they like the interface.
+include("onnx_adapter/onnx_adapter.jl")
+export my_build_flux_model, my_verify
 
 
 end
