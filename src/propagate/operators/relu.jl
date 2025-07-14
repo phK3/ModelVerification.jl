@@ -589,19 +589,22 @@ end
 beta        reach x batch
 A .+ S.* beta =#
 
+# TODO: Is this only useful for ReLU layers?
+#   - we could just ignore upper_slope if our function has optimizable lower and upper slope?
+#   - maybe use different shape for alpha then?
 mutable struct BetaLayer
     node
-    alpha
-    beta
-    beta_S
+    alpha  # optimizable slope values
+    beta   # optimizable lagrange multipliers for splits
+    beta_S # mask? for already split nodes?
     beta_index
     spec_A_b
-    lower
+    lower  # Bool (?) indicating that lower or upper bound needs to be computed
     unstable_mask
     active_mask 
-    upper_slope
-    lower_bias
-    upper_bias
+    upper_slope # vec of slopes for upper relaxation (u/(u-l) for ReLU)
+    lower_bias  # vec of biases for lower relaxation (always 0 for ReLU) 
+    upper_bias  # vec of biases for upper relaxation (-l*u / (u-l))
     use_alpha::Bool
     use_beta::Bool
 end
