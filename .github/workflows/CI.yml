@@ -49,7 +49,7 @@ jobs:
           echo "Runner Arch: ${{ runner.arch }}"
           echo "Runner Labels: ${{ runner.labels }}"
       - name: Set up CUDA
-        if: matrix.os == 'ubuntu-latest'
+        if: contains(runner.labels, 'self-hosted') && matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get update
           sudo apt-get install -y nvidia-cuda-toolkit
