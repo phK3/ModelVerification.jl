@@ -42,6 +42,12 @@ jobs:
             ${{ runner.os }}-test-${{ env.cache-name }}-
             ${{ runner.os }}-test-
             ${{ runner.os }}-
+      - name: Print runner information
+        run: | 
+          echo "Runner name: ${{ runner.name }}"
+          echo "Runner OS: ${{ runner.os }}"
+          echo "Runner Arch: ${{ runner.arch }}"
+          echo "Runner Labels: ${{ runner.labels }}"
       - name: Set up CUDA
         if: matrix.os == 'ubuntu-latest'
         run: |
