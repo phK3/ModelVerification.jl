@@ -41,6 +41,9 @@ Converts from VNNLib.OnnxParser's `OnnxNet` to `ModelVerification.ModelGraph`.
 - `ModelVerification.ModelGraph`: A model graph representation of the ONNX model.
 """
 function Base.convert(::Type{ModelGraph}, model::OnnxNet)
+    # ModelVerification needs a separate node to handle input variables.
+    model = add_dummy_input_node(model)
+
     # Convert the ONNX model to a ModelGraph
     start_nodes = model.start_nodes
     final_nodes = model.final_nodes

@@ -111,6 +111,7 @@ include("spec/spec.jl")
 export ImageConvexHull, InputSpec, OutputSpec, ImageLinfBall
 export get_linear_spec, classification_spec
 
+include("utils/vnnlib_adapter.jl")
 include("utils/activation.jl")
 include("utils/network.jl")
 include("utils/problem.jl")
