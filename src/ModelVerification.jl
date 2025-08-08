@@ -23,8 +23,6 @@ using PaddedViews
 using Accessors
 
 using Images, ImageIO
-# removed those packages to allow for newer versions of Julia
-# using ONNXNaiveNASflux, NaiveNASflux, .NaiveNASlib
 using LinearAlgebra
 using OpenCV
 using Flux
@@ -34,6 +32,10 @@ using Statistics
 using Einsum
 using Zygote
 using UUIDs
+
+using VNNLib, VNNLib.OnnxParser
+using VNNLib.OnnxParser: onnx_node_to_flux_layer
+const OXP = VNNLib.OnnxParser
 
 using ReachabilityAnalysis
 
@@ -165,6 +167,7 @@ include("propagate/operators/parallel.jl")
 include("propagate/operators/util.jl")
 include("propagate/operators/tanh.jl")
 include("propagate/operators/sigmoid.jl")
+include("propagate/vnnlib_adapter.jl")
 
 include("attack/pgd.jl")
 
