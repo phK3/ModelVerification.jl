@@ -49,7 +49,7 @@ cuDNN = "02a925ec-e4fe-4b08-9a7e-0d78e3d38ccd"
 VNNLib = {rev = "extension", url = "https://github.com/samysweb/VNNLib.jl"}
 
 [compat]
-OpenSSL_jll = "3.5.2"
+OpenSSL_jll = "3.5"
 Statistics = "1.11.1"
 VNNLib = "0.3.0"
 cuDNN = "1.4.3"
