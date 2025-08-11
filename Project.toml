@@ -50,7 +50,7 @@ VNNLib = {rev = "extension", url = "https://github.com/samysweb/VNNLib.jl"}
 
 [compat]
 OpenSSL_jll = "3.5"
-Statistics = "1.11.1"
+Statistics = ">= 1.10"
 VNNLib = "0.3.0"
 cuDNN = "1.4.3"
 
